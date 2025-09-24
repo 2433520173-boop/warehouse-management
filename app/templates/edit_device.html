@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Chỉnh sửa: {{ device.name }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header"><h4>Chỉnh sửa: {{ device.name }}</h4></div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="form-group"><label>Tên</label><input type="text" class="form-control" name="name" value="{{ device.name }}" required></div>
+                    <div class="form-group"><label>Serial</label><input type="text" class="form-control" name="serial" value="{{ device.serial }}" required></div>
+                    <div class="form-group"><label>Danh mục</label><input type="text" class="form-control" name="category" value="{{ device.category }}"></div>
+                    <div class="form-group"><label>Mô tả</label><textarea class="form-control" name="description" rows="3">{{ device.description }}</textarea></div>
+                    <div class="form-group"><label>Vị trí</label><input type="text" class="form-control" name="location" value="{{ device.location }}"></div>
+                    <div class="form-group"><label>Trạng thái</label>
+                        <select class="form-control" name="status">
+                            <option value="available" {% if device.status == 'available' %}selected{% endif %}>Có sẵn</option>
+                            <option value="borrowed" {% if device.status == 'borrowed' %}selected{% endif %}>Đã mượn</option>
+                            <option value="maintenance" {% if device.status == 'maintenance' %}selected{% endif %}>Bảo trì</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Ảnh mới</label><input type="file" class="form-control-file" name="image">
+                        {% if device.image_url %}<img src="{{ url_for('static', filename='uploads/' + device.image_url) }}" width="100" class="mt-2">{% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                    <a href="{{ url_for('device.device_detail', device_id=device.id) }}" class="btn btn-secondary">Hủy</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

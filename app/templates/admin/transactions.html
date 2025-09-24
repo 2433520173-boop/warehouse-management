@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Quản lý Giao dịch{% endblock %}
+{% block content %}
+<h2 class="mb-4">Lịch sử Giao dịch</h2>
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th>Thiết bị</th>
+                    <th>Serial</th>
+                    <th>Người dùng</th>
+                    <th>Loại</th>
+                    <th>Thời gian</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trans in transactions.items %}
+                <tr>
+                    <td>{{ trans.device.name }}</td>
+                    <td>{{ trans.device.serial }}</td>
+                    <td>{{ trans.user.username }}</td>
+                    <td>
+                        {% if trans.transaction_type == 'borrow' %}<span class="badge badge-warning">Mượn</span>
+                        {% else %}<span class="badge badge-success">Trả</span>{% endif %}
+                    </td>
+                    <td>{{ trans.created_at | localtime }}</td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-center">Không có giao dịch nào.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<nav class="mt-4"><ul class="pagination justify-content-center">{% for page_num in transactions.iter_pages() %}{% if page_num %}<li class="page-item {% if transactions.page == page_num %}active{% endif %}"><a class="page-link" href="{{ url_for('admin.transactions', page=page_num) }}">{{ page_num }}</a></li>{% endif %}{% endfor %}</ul></nav>
+{% endblock %}

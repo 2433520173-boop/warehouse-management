@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Admin Dashboard</h2>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Người dùng</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ stats.users }}</h5>
+                <p class="card-text">Tổng số tài khoản đã đăng ký.</p>
+                <a href="{{ url_for('admin.users') }}" class="text-white stretched-link">Xem chi tiết &rarr;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-header">Thiết bị</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ stats.devices }}</h5>
+                <p class="card-text">Tổng số thiết bị trong kho.</p>
+                <a href="{{ url_for('admin.devices') }}" class="text-white stretched-link">Xem chi tiết &rarr;</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-secondary mb-3">
+            <div class="card-header">Giao dịch</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ stats.transactions }}</h5>
+                <p class="card-text">Tổng số lượt mượn/trả.</p>
+                <a href="{{ url_for('admin.transactions') }}" class="text-white stretched-link">Xem chi tiết &rarr;</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

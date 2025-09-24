@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Phiếu Giao Dịch</title>
+    <style>
+        @font-face { font-family: 'DejaVu Sans'; src: url(https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans.ttf); }
+        body { font-family: 'DejaVu Sans', Arial, sans-serif; font-size: 12px; color: #333; }
+        h1 { text-align: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        td { padding: 8px; border: 1px solid #ddd; }
+        td:first-child { font-weight: bold; width: 150px; background-color: #f9f9f9; }
+    </style>
+</head>
+<body>
+    <h1>PHIẾU {% if transaction.transaction_type == 'borrow' %}MƯỢN{% else %}TRẢ{% endif %} THIẾT BỊ</h1>
+    <table>
+        <tr><td>Loại giao dịch:</td><td>{% if transaction.transaction_type == 'borrow' %}Mượn thiết bị{% else %}Trả thiết bị{% endif %}</td></tr>
+        <tr><td>Người thực hiện:</td><td>{{ user.full_name or user.username }}</td></tr>
+        <tr><td>Mã số sinh viên:</td><td>{{ user.student_id or 'N/A' }}</td></tr>
+        <tr><td>Thiết bị:</td><td>{{ device.name }}</td></tr>
+        <tr><td>Serial Number:</td><td>{{ device.serial }}</td></tr>
+        <tr><td>Thời gian:</td><td>{{ transaction.created_at.strftime('%H:%M:%S ngày %d-%m-%Y') }}</td></tr>
+        <tr><td>Ghi chú:</td><td>{{ transaction.notes or 'Không có' }}</td></tr>
+    </table>
+</body>
+</html>

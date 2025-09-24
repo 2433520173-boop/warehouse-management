@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ device.name }}{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-5">
+        <img src="{{ url_for('static', filename='uploads/' + device.image_url) if device.image_url else 'https://via.placeholder.com/400x300' }}" class="img-fluid rounded" alt="{{ device.name }}">
+    </div>
+    <div class="col-md-7">
+        <h2>{{ device.name }}</h2>
+        <p class="text-muted">Serial Number: <strong>{{ device.serial }}</strong></p>
+        <p><strong>Trạng thái:</strong> 
+            {% if device.status == 'available' %}<span class="badge badge-success">Có sẵn</span>
+            {% elif device.status == 'borrowed' %}<span class="badge badge-warning">Đã mượn</span>
+            {% else %}<span class="badge badge-secondary">{{ device.status }}</span>{% endif %}
+        </p>
+        <p><strong>Mô tả:</strong> {{ device.description or 'Không có' }}</p>
+        <hr>
+        {% if device.status == 'available' %}
+            <form action="{{ url_for('device.borrow_device', device_id=device.id) }}" method="POST"><button type="submit" class="btn btn-primary">Mượn thiết bị</button></form>
+        {% elif device.status == 'borrowed' %}
+            <form action="{{ url_for('device.return_device', device_id=device.id) }}" method="POST"><button type="submit" class="btn btn-success">Trả thiết bị</button></form>
+        {% endif %}
+        {% if current_user.is_admin %}
+            <a href="{{ url_for('device.edit_device', device_id=device.id) }}" class="btn btn-secondary">Chỉnh sửa</a>
+            <form action="{{ url_for('device.delete_device', device_id=device.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa?');"><button type="submit" class="btn btn-danger">Xóa</button></form>
+        {% endif %}
+    </div>
+</div>
+<div class="card mt-4">
+    <div class="card-header"><h4>Lịch sử Giao dịch</h4></div>
+    <ul class="list-group list-group-flush">
+        {% for trans in transactions %}<li class="list-group-item">{{ trans.user.username }} đã {% if trans.transaction_type == 'borrow' %}mượn{% else %}trả{% endif %} lúc {{ trans.created_at | localtime }}</li>{% else %}<li class="list-group-item">Chưa có giao dịch.</li>{% endfor %}
+    </ul>
+</div>
+{% endblock %}

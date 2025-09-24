@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Trang chủ{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Chào mừng, {{ current_user.full_name or current_user.username }}!</h1>
+    <p class="lead">Hệ thống Quản lý thiết giúp bạn theo dõi thiết bị một cách dễ dàng.</p>
+</div>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4>Giao dịch gần đây</h4>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for trans in recent_transactions %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ trans.user.username }}</strong> đã 
+                        {% if trans.transaction_type == 'borrow' %}
+                            <span class="text-warning">mượn</span>
+                        {% else %}
+                            <span class="text-success">trả</span>
+                        {% endif %}
+                        thiết bị 
+                        <a href="{{ url_for('device.device_detail', device_id=trans.device_id) }}">{{ trans.device.name }}</a>
+                    </div>
+                    <small class="text-muted">{{ trans.created_at | localtime }}</small>
+                </li>
+                {% else %}
+                <li class="list-group-item">Chưa có giao dịch nào.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h4>Thống kê</h4>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Tổng thiết bị
+                    <span class="badge badge-primary badge-pill">{{ stats.total_devices }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Có sẵn
+                    <span class="badge badge-success badge-pill">{{ stats.available_devices }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Đã mượn
+                    <span class="badge badge-warning badge-pill">{{ stats.borrowed_devices }}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Danh sách Thiết bị{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Danh sách Thiết bị</h2>
+    {% if current_user.is_admin %}
+    <a href="{{ url_for('device.add_device') }}" class="btn btn-primary">Thêm thiết bị mới</a>
+    {% endif %}
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="GET" action="{{ url_for('device.devices') }}">
+                    <div class="form-group">
+                        <label for="query"><strong>Tìm kiếm thiết bị</strong></label>
+                        <textarea class="form-control" id="query" name="query" rows="3" placeholder="Nhập tên thiết bị hoặc dán danh sách serial.">{{ query or '' }}</textarea>
+                    </div>
+                    <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+                    <a href="{{ url_for('device.devices') }}" class="btn btn-secondary">Xóa bộ lọc</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mb-3">
+    <button type="submit" form="borrow-form" class="btn btn-success" onclick="return confirm('Bạn có chắc chắn muốn MƯỢN các thiết bị đã chọn?');">Mượn mục đã chọn</button>
+    
+    <button type="submit" form="return-form" class="btn btn-warning" onclick="return confirm('Bạn có chắc chắn muốn TRẢ các thiết bị đã chọn?');">Trả mục đã chọn</button>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <form action="{{ url_for('device.borrow_multiple') }}" method="POST" id="borrow-form"></form>
+        <form action="{{ url_for('device.return_multiple') }}" method="POST" id="return-form"></form>
+        
+        <table class="table table-hover mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th style="width: 5%;" class="text-center">Chọn</th>
+                    <th>Tên thiết bị</th>
+                    <th>Serial</th>
+                    <th>Trạng thái</th>
+                    <th class="text-right">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for device in devices %}
+                <tr>
+                    <td class="text-center">
+                        {% if device.status == 'available' %}
+                        <input type="checkbox" name="device_ids" value="{{ device.id }}" form="borrow-form">
+                        {% endif %}
+                        
+                        {% if device.status == 'borrowed' %}
+                        <input type="checkbox" name="device_ids" value="{{ device.id }}" form="return-form">
+                        {% endif %}
+                    </td>
+                    <td>{{ device.name }}</td>
+                    <td>{{ device.serial }}</td>
+                    <td>
+                        {% if device.status == 'available' %}<span class="badge badge-success">Có sẵn</span>
+                        {% elif device.status == 'borrowed' %}<span class="badge badge-warning">Đã mượn</span>
+                        {% else %}<span class="badge badge-secondary">{{ device.status }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-right">
+                        <a href="{{ url_for('device.device_detail', device_id=device.id) }}" class="btn btn-sm btn-info">Xem</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="5" class="text-center">Không tìm thấy thiết bị nào.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

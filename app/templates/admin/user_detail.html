@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Chi tiết: {{ user.username }}{% endblock %}
+{% block content %}
+<h2 class="mb-4">Chi tiết người dùng: <span class="text-primary">{{ user.username }}</span></h2>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header"><h4>Thông tin cá nhân</h4></div>
+            <div class="card-body">
+                <p><strong>Username:</strong><br>{{ user.username }}</p>
+                <p><strong>Email:</strong><br>{{ user.email }}</p>
+                <p><strong>Họ và tên:</strong><br>{{ user.full_name or 'Chưa cập nhật' }}</p>
+                <p><strong>Ngày tham gia:</strong><br>{{ user.created_at | localtime }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header"><h4>Lịch sử giao dịch</h4></div>
+            <ul class="list-group list-group-flush">
+                {% for trans in transactions %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            {% if trans.transaction_type == 'borrow' %}<span class="badge badge-warning mr-2">Mượn</span>{% else %}<span class="badge badge-success mr-2">Trả</span>{% endif %}
+                            <a href="{{ url_for('device.device_detail', device_id=trans.device.id) }}">{{ trans.device.name }}</a>
+                        </div>
+                        <small class="text-muted">{{ trans.created_at | localtime }}</small>
+                    </li>
+                {% else %}
+                    <li class="list-group-item">Sinh viên chưa từng mượn</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="mt-4"><a href="{{ url_for('admin.users') }}" class="btn btn-secondary">&larr; Quay lại danh sách người dùng</a></div>
+{% endblock %}

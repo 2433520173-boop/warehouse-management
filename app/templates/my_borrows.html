@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Phiếu mượn của tôi{% endblock %}
+{% block content %}
+<h2 class="mb-4">Các phiếu đang mượn</h2>
+{% if slips %}
+    {% for slip in slips %}
+    <div class="card mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <strong>Phiếu mượn #{{ slip.id }}</strong>
+            <small class="text-muted">Ngày mượn: {{ slip.created_at | localtime }}</small>
+        </div>
+        <ul class="list-group list-group-flush">
+            {% for trans in slip.transactions if trans.transaction_type == 'borrow' %}
+            <li class="list-group-item">{{ trans.device.name }} (SN: {{ trans.device.serial }})</li>
+            {% endfor %}
+        </ul>
+        <div class="card-footer">
+            <form action="{{ url_for('device.return_slip', slip_id=slip.id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn trả toàn bộ thiết bị trong phiếu này?');">
+                <button type="submit" class="btn btn-warning">Trả toàn bộ phiếu</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">Bạn không có phiếu mượn nào đang hoạt động.</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Phiếu Giao Dịch Hàng Loạt</title>
+    <style>
+        @font-face { font-family: 'DejaVu Sans'; src: url(https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans.ttf); }
+        body { font-family: 'DejaVu Sans', Arial, sans-serif; font-size: 12px; color: #333; }
+        h1 { text-align: center; border-bottom: 1px solid #ccc; padding-bottom: 10px; }
+        .info p { margin: 5px 0; }
+        table { width: 100%; margin-top: 20px; border-collapse: collapse; }
+        th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>PHIẾU {% if type == 'borrow' %}MƯỢN{% else %}TRẢ{% endif %} THIẾT BỊ HÀNG LOẠT</h1>
+    <div class="info">
+        <p><strong>Người thực hiện:</strong> {{ user.full_name or user.username }}</p>
+        <p><strong>Thời gian:</strong> {{ transactions[0].created_at | localtime }}</p>
+        <p><strong>Tổng số lượng:</strong> {{ transactions|length }} thiết bị</p>
+    </div>
+    <table>
+        <thead><tr><th>STT</th><th>Tên thiết bị</th><th>Serial Number</th></tr></thead>
+        <tbody>
+            {% for trans in transactions %}
+            <tr><td>{{ loop.index }}</td><td>{{ trans.device.name }}</td><td>{{ trans.device.serial }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
