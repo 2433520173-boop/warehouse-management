@@ -6,3 +6,4 @@ Werkzeug
 WeasyPrint
 python-dotenv
 click
+gunicorn
