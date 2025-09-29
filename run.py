@@ -9,6 +9,7 @@ app = create_app(config_name)
 
 # --- Lệnh khởi tạo CSDL mới ---
 @app.cli.command("init-db")
+@click.echo("Bắt đầu quá trình khởi tạo cơ sở dữ liệu...")
 def init_db_command():
     """Xóa và tạo lại cơ sở dữ liệu với dữ liệu mẫu."""
     # Đặt lệnh echo VÀO TRONG hàm
