@@ -7,3 +7,4 @@ WeasyPrint
 python-dotenv
 click
 gunicorn
+psycopg2-binary
