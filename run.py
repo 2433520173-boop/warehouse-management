@@ -2,35 +2,40 @@ import os
 import click
 from app import create_app, db
 from app.models import User
-from werkzeug.security import generate_password_hash
 
+# Đọc biến môi trường để quyết định cấu hình
 config_name = os.getenv('FLASK_CONFIG') or 'default'
 app = create_app(config_name)
 
+# --- Lệnh khởi tạo CSDL mới ---
 @app.cli.command("init-db")
+@click.echo("Bắt đầu quá trình khởi tạo cơ sở dữ liệu...")
 def init_db_command():
     """Xóa và tạo lại cơ sở dữ liệu với dữ liệu mẫu."""
     db.drop_all()
     db.create_all()
 
-    if not User.query.filter_by(username='admin').first():
-        admin = User(
-            username='admin', email='admin@example.com', full_name='Quản Trị Viên',
-            student_id='ADMIN001', class_name='ADMIN', is_admin=True
-        )
-        admin.set_password('admin123')
-        db.session.add(admin)
+    # Tạo tài khoản admin
+    admin = User(
+        username='admin', email='admin@example.com', full_name='Quản Trị Viên',
+        is_admin=True
+    )
+    admin.set_password('admin123')
+    db.session.add(admin)
 
-    if not User.query.filter_by(username='user').first():
-        user = User(
-            username='user', email='user@example.com', full_name='Người Dùng Mẫu',
-            student_id='USER001', class_name='USER'
-        )
-        user.set_password('user123')
-        db.session.add(user)
+    # Tạo tài khoản user mẫu
+    user = User(
+        username='user', email='user@example.com', full_name='Người Dùng Mẫu'
+    )
+    user.set_password('user123')
+    db.session.add(user)
 
     db.session.commit()
-    click.echo('Initialized the database and created sample users.')
+    click.echo('🎉 Khởi tạo cơ sở dữ liệu và tạo tài khoản mẫu thành công!')
 
+
+# --- Logic chạy ứng dụng ---
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    # SỬA LẠI Ở ĐÂY:
+    # Lấy giá trị DEBUG từ file config thay vì đặt cứng là True
+    app.run(host='0.0.0.0', debug=app.config.get('DEBUG', False))
