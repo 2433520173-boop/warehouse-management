@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Danh sách Mượn của tôi{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card">
+            <div class="card-header">
+                <h2>Danh sách Mượn của tôi</h2>
+                <p>Đây là các thiết bị bạn đã chọn. Hãy kiểm tra kỹ trước khi gửi yêu cầu cho admin.</p>
+            </div>
+            <div class="card-body">
+                {% if list_items %}
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Tên thiết bị</th>
+                                <th>Serial</th>
+                                <th class="text-right">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in list_items %}
+                            <tr>
+                                <td>{{ item.device.name }}</td>
+                                <td>{{ item.device.serial }}</td>
+                                <td class="text-right">
+                                    <form action="{{ url_for('main.remove_from_list', item_id=item.id) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa vật phẩm này khỏi danh sách?');">Xóa</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    <hr>
+                    <form action="{{ url_for('main.submit_list') }}" method="POST">
+                        <button type.submit" class="btn btn-success btn-lg btn-block" onclick="return confirm('Bạn có chắc chắn muốn gửi danh sách này cho Admin? Bạn sẽ không thể sửa danh sách sau khi gửi.');">
+                            Gửi Yêu cầu cho Admin
+                        </button>
+                    </form>
+                {% else %}
+                    <div class="alert alert-info">
+                        Danh sách của bạn đang trống.
+                        <a href="{{ url_for('device.devices') }}" class="alert-link">Hãy chọn một số thiết bị</a>!
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

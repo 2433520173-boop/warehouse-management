@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Chi tiết Yêu cầu #{{ borrow_list.id }}{% endblock %}
+
+{% block content %}
+<h2>Chi tiết Yêu cầu #{{ borrow_list.id }}</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <strong>Thông tin Học sinh</strong>
+            </div>
+            <div class="card-body">
+                <p><strong>Tên:</strong> {{ borrow_list.user.full_name or borrow_list.user.username }}</p>
+                <p><strong>Email:</strong> {{ borrow_list.user.email }}</p>
+                <p><strong>Mã SV:</strong> {{ borrow_list.user.student_id or 'N/A' }}</p>
+                <p><strong>Lớp:</strong> {{ borrow_list.user.class_name or 'N/A' }}</p>
+                <p><strong>Thời gian gửi:</strong> {{ borrow_list.created_at.strftime('%H:%M %d-%m-%Y') }}</p>
+                <p><strong>Trạng thái:</strong>
+                    {% if borrow_list.status == 'Submitted' %}<span class="badge badge-warning">Đang chờ soạn</span>
+                    {% elif borrow_list.status == 'Ready' %}<span class="badge badge-success">Sẵn sàng (Chờ lấy)</span>
+                    {% elif borrow_list.status == 'Completed' %}<span class="badge badge-secondary">Đã hoàn tất</span>
+                    {% elif borrow_list.status == 'Cancelled' %}<span class="badge badge-danger">Đã hủy</span>
+                    {% else %}<span class="badge badge-info">{{ borrow_list.status }}</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <strong>Danh sách Thiết bị ({{ borrow_list.items.count() }} món)</strong>
+            </div>
+            <table class="table mb-0">
+                <thead>
+                    <tr>
+                        <th>Tên thiết bị</th>
+                        <th>Serial</th>
+                        <th>Vị trí</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in borrow_list.items.all() %}
+                    <tr>
+                        <td>{{ item.device.name }}</td>
+                        <td>{{ item.device.serial }}</td>
+                        <td>{{ item.device.location }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div class="card-footer">
+                {% if borrow_list.status == 'Submitted' %}
+                    <form action="{{ url_for('admin.mark_as_ready', list_id=borrow_list.id) }}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-primary" onclick="return confirm('Bạn xác nhận đã soạn xong các thiết bị này?');">
+                            ✅ Đánh dấu Sẵn sàng
+                        </button>
+                    </form>
+                {% elif borrow_list.status == 'Ready' %}
+                    <form action="{{ url_for('admin.mark_as_completed', list_id=borrow_list.id) }}" method="POST" class="d-inline">
+                        <button type="submit" class="btn btn-success" onclick="return confirm('Xác nhận đã GIAO các thiết bị này cho học sinh?');">
+                            📦 Hoàn tất Giao đồ
+                        </button>
+                    </form>
+                {% endif %}
+
+                {% if borrow_list.status == 'Submitted' or borrow_list.status == 'Ready' %}
+                    <form action="{{ url_for('admin.cancel_request', list_id=borrow_list.id) }}" method="POST" class="d-inline float-right">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn HỦY yêu cầu này? Thiết bị sẽ được trả về kho.');">
+                            Hủy yêu cầu
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

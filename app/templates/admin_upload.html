@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Upload Thiết bị bằng Excel{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h2>Upload Thiết bị hàng loạt bằng Excel</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>Hướng dẫn định dạng file Excel:</strong>
+                    <ul>
+                        <li>File phải là `.xlsx` hoặc `.xls`.</li>
+                        <li>Dòng đầu tiên phải là tiêu đề của cột.</li>
+                        <li>Các cột sau là bắt buộc:
+                            <ul>
+                                <li><strong>name</strong> (Tên thiết bị)</li>
+                                <li><strong>serial</strong> (Số Serial, phải là duy nhất)</li>
+                            </ul>
+                        </li>
+                        <li>Các cột sau là tùy chọn (nếu thiếu sẽ dùng giá trị mặc định):
+                            <ul>
+                                <li><strong>category</strong> (Danh mục, vd: 'Linh kiện', 'Công cụ')</li>
+                                <li><strong>description</strong> (Mô tả)</li>
+                                <li><strong>location</strong> (Vị trí, vd: 'Kho A', 'Tủ 1')</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data" action="{{ url_for('admin.upload_devices') }}">
+                    <div class="form-group">
+                        <label for="file">Chọn file Excel</label>
+                        <input type="file" class="form-control-file" id="file" name="file" accept=".xlsx, .xls" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Tải lên và xử lý</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

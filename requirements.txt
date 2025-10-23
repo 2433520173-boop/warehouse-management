@@ -9,3 +9,5 @@ click
 gunicorn
 psycopg2-binary
 Flask-Mail
+pandas
+openpyxl

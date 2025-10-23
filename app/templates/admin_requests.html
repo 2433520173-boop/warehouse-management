@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Quản lý Yêu cầu Mượn{% endblock %}
+
+{% block content %}
+<h2>Quản lý Yêu cầu Mượn</h2>
+<p>Nơi xử lý các yêu cầu mượn thiết bị từ học sinh.</p>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <h4><span class="badge badge-warning">{{ submitted_lists|length }}</span> Yêu cầu đang chờ soạn (Submitted)</h4>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Mã Phiếu</th>
+                    <th>Học sinh</th>
+                    <th>Email</th>
+                    <th>Thời gian gửi</th>
+                    <th>Số lượng</th>
+                    <th class="text-right">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for list in submitted_lists %}
+                <tr>
+                    <td>#{{ list.id }}</td>
+                    <td>{{ list.user.full_name or list.user.username }}</td>
+                    <td>{{ list.user.email }}</td>
+                    <td>{{ list.created_at.strftime('%H:%M %d-%m-%Y') }}</td>
+                    <td><span class="badge badge-primary">{{ list.items.count() }}</span> món</td>
+                    <td class="text-right">
+                        <a href="{{ url_for('admin.request_detail', list_id=list.id) }}" class="btn btn-sm btn-info">Xem chi tiết</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">Không có yêu cầu nào đang chờ soạn.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4><span class="badge badge-success">{{ ready_lists|length }}</span> Yêu cầu chờ học sinh lấy (Ready)</h4>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-hover mb-0">
+            <thead>
+                <tr>
+                    <th>Mã Phiếu</th>
+                    <th>Học sinh</th>
+                    <th>Email</th>
+                    <th>Thời gian gửi</th>
+                    <th>Số lượng</th>
+                    <th class="text-right">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for list in ready_lists %}
+                <tr>
+                    <td>#{{ list.id }}</td>
+                    <td>{{ list.user.full_name or list.user.username }}</td>
+                    <td>{{ list.user.email }}</td>
+                    <td>{{ list.created_at.strftime('%H:%M %d-%m-%Y') }}</td>
+                    <td><span class="badge badge-primary">{{ list.items.count() }}</span> món</td>
+                    <td class="text-right">
+                        <a href="{{ url_for('admin.request_detail', list_id=list.id) }}" class="btn btn-sm btn-info">Xem chi tiết & Giao đồ</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">Không có yêu cầu nào đang chờ học sinh lấy.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

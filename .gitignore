@@ -97,6 +97,9 @@ celerybeat.pid
 .venv
 env/
 venv/
+
+
+
 ENV/
 env.bak/
 venv.bak/
@@ -124,3 +127,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+#custom gitignore
+*.db
+venv\

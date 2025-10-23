@@ -49,7 +49,7 @@ def send_transaction_email(user, device, transaction_type):
 
 
 def send_batch_transaction_email(user, devices, transaction_type):
-    device_list_html = "".join([f"<li>{d.name} ({d.serial})</li>" for d in devices])
+    device_list_html = "".join([f"<li>{d.device.name} ({d.device.serial})</li>" for d in devices])
     subject = f"Thông báo {transaction_type} hàng loạt thiết bị"
     html_content = f"""
     <h3>Xin chào {user.full_name},</h3>

@@ -8,3 +8,49 @@ body { background-color: #f8f9fa; }
 .badge-warning { background-color: #ffc107; color: black; }
 .badge-secondary { background-color: #6c757d; color: white; }
 .pagination { justify-content: center; }
+/* ----- CSS cho Tab Danh mục Thiết bị ----- */
+
+/* Định dạng chung cho các tab */
+.nav-tabs .nav-link {
+    border: 1px solid transparent; /* Bỏ viền mặc định */
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+    transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out; /* Hiệu ứng chuyển mượt */
+    color: #495057; /* Màu chữ hơi xám */
+    background-color: #e9ecef; /* Màu nền hơi xám nhẹ */
+    margin-right: 2px; /* Khoảng cách nhỏ giữa các tab */
+}
+
+/* Khi đưa chuột vào tab (HOVER) */
+.nav-tabs .nav-link:hover {
+    background-color: #dee2e6; /* Nền sáng hơn một chút */
+    border-color: #dee2e6 #dee2e6 #dee2e6; /* Viền mờ */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Đổ bóng nhẹ */
+    color: #0056b3; /* Màu chữ xanh dương đậm hơn */
+    z-index: 2; /* Đảm bảo tab hover nằm trên các tab khác */
+}
+
+/* Định dạng cho tab đang được chọn (ACTIVE) */
+.nav-tabs .nav-link.active {
+    color: #0056b3; /* Chữ màu xanh đậm */
+    background-color: #fff; /* Nền TRẮNG */
+    /* Giữ lại viền trên và 2 bên màu xanh, viền dưới màu trắng để liền mạch */
+    border-color: #007bff #007bff #fff;
+    font-weight: bold; /* Chữ đậm */
+    box-shadow: none; /* Bỏ đổ bóng khi active */
+    /* Thêm thuộc tính để tab active hơi nhô lên một chút */
+    position: relative;
+    top: -1px;
+}
+
+/* Khi hover vào tab đang active */
+.nav-tabs .nav-link.active:hover {
+     background-color: #f8f9fa; /* Nền hơi xám nhẹ khi hover */
+     border-color: #007bff #007bff #f8f9fa; /* Viền dưới đổi màu theo nền */
+     color: #0056b3; /* Chữ vẫn xanh đậm */
+}
+
+/* Đường gạch ngang dưới các tab */
+.nav-tabs {
+    border-bottom: 1px solid #007bff; /* Đường gạch màu xanh */
+}

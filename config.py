@@ -26,12 +26,12 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'warehouse.db')
-
 class ProductionConfig(Config):
     """Cấu hình cho môi trường sản phẩm (trên Render)."""
     DEBUG = False
     # Bắt buộc phải có DATABASE_URL trên môi trường production
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+	'sqlite:///' + os.path.join(basedir, 'warehouse.db')
     # Thêm các cấu hình khác cho production nếu cần
 
 # Dictionary để lựa chọn cấu hình
