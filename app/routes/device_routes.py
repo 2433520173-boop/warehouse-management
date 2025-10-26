@@ -87,6 +87,12 @@ def add_device():
     """Thêm một hoặc nhiều thiết bị mới."""
     if request.method == 'POST':
         name, serials_input = request.form['name'].strip(), request.form['serials'].strip()
+        
+        # --- THÊM MỚI: Lấy đơn vị tính từ form ---
+        unit = request.form.get('unit', 'Cái').strip()
+        if not unit: # Nếu người dùng xóa trắng
+            unit = 'Cái'
+        
         if not name or not serials_input:
             flash('Tên thiết bị và Serial không được để trống!', 'error'); return render_template('add_device.html', form=request.form)
 
@@ -103,6 +109,8 @@ def add_device():
             if Device.query.filter_by(serial=serial).first(): error_serials.append(serial); continue
             new_device = Device(name=name, serial=serial,
                                 category=request.form.get('category', 'Other'),
+                                # --- THÊM MỚI: Thêm unit vào ---
+                                unit=unit,
                                 description=request.form.get('description'),
                                 location=request.form.get('location'),
                                 image_url=image_filename,
@@ -124,8 +132,15 @@ def edit_device(device_id):
     """Chỉnh sửa thông tin một thiết bị."""
     device = Device.query.get_or_404(device_id)
     if request.method == 'POST':
-        device.name, device.serial, device.category, device.description, device.location, device.status = \
-            request.form['name'], request.form['serial'], request.form['category'], request.form['description'], request.form['location'], request.form['status']
+        # --- CẬP NHẬT: Thêm 'unit' vào ---
+        device.name = request.form['name']
+        device.serial = request.form['serial']
+        device.category = request.form['category']
+        device.unit = request.form.get('unit', 'Cái') # Thêm dòng này
+        device.description = request.form['description']
+        device.location = request.form['location']
+        device.status = request.form['status']
+        
         if 'image' in request.files:
             file = request.files['image']
             if file and file.filename and allowed_file(file.filename):
@@ -166,7 +181,7 @@ def borrow_device(device_id):
         db.session.add(transaction); db.session.commit()
         flash(f'Bạn đã mượn "{device.name}" thành công!', 'success')
     else: flash(f'Thiết bị này không có sẵn (trạng thái: {device.status}).', 'error')
-    return redirect(url_for('device.device_detail', device_id=device.id))
+    return redirect(url_for('device.device_detail', device_id=device_id))
 
 @device_bp.route('/return/<int:device_id>', methods=['POST'])
 @login_required
@@ -182,7 +197,7 @@ def return_device(device_id):
         db.session.add(transaction); db.session.commit()
         flash(f'Bạn đã trả "{device.name}" thành công!', 'success')
     else: flash('Thiết bị này không ở trạng thái đang được mượn.', 'error')
-    return redirect(url_for('device.device_detail', device_id=device.id))
+    return redirect(url_for('device.device_detail', device_id=device_id))
 
 @device_bp.route('/borrow-multiple', methods=['POST'])
 @login_required
@@ -271,8 +286,10 @@ def add_to_list(device_id):
 def export_devices_csv():
     """Xuất danh sách thiết bị ra file CSV."""
     si = StringIO(); cw = csv.writer(si)
-    headers = ['ID', 'Name', 'Serial', 'Category', 'Status', 'Location', 'Created At']
+    # --- CẬP NHẬT: Thêm cột 'Unit' ---
+    headers = ['ID', 'Name', 'Serial', 'Category', 'Unit', 'Status', 'Location', 'Created At']
     cw.writerow(headers)
     for device in Device.query.all():
-        cw.writerow([device.id, device.name, device.serial, device.category, device.status, device.location, device.created_at.strftime('%Y-%m-%d')])
+        # --- CẬP NHẬT: Thêm device.unit ---
+        cw.writerow([device.id, device.name, device.serial, device.category, device.unit, device.status, device.location, device.created_at.strftime('%Y-%m-%d')])
     return Response(si.getvalue(), mimetype="text/csv", headers={"Content-disposition": "attachment; filename=devices_export.csv"})

@@ -6,6 +6,8 @@
     <title>{% block title %}Hệ thống Quản lý Kho{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
 
     <style>
         body {
@@ -49,6 +51,9 @@
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('admin.requests_list') }}">Quản lý Yêu cầu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin.overdue_list') }}">Quản lý Quá hạn</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ url_for('admin.upload_devices') }}">Upload</a>
@@ -102,7 +107,7 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
-            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            <div class="alert alert-{{ category }} alert-dismissible fade show auto-dismiss" role="alert">
                 {{ message }}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -121,8 +126,27 @@
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        // Chờ cho tài liệu được tải xong
+        $(document).ready(function() {
+            // Đặt thời gian chờ là 3000 mili giây (3 giây)
+            setTimeout(function() {
+                // Tìm tất cả các thông báo có class 'auto-dismiss'
+                // và làm mờ chúng đi (fade out)
+                $(".auto-dismiss").fadeOut("slow", function() {
+                    // Sau khi mờ xong, đóng chúng lại
+                    $(this).alert('close');
+                });
+            }, 3000); // 3 giây
+        });
+    </script>
+
+    {% block scripts %}
+    {% endblock %}
+
 </body>
 </html>

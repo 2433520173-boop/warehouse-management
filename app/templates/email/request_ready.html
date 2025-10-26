@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yêu cầu Mượn Đã Sẵn Sàng</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; }
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        /* THÊM MỚI: Căn giữa cột STT */
+        th:first-child, td:first-child { text-align: center; width: 5%; }
+    </style>
+</head>
+<body>
+    <p>Xin chào {{ user.full_name or user.username }},</p>
+    <p>Yêu cầu mượn thiết bị <strong>#{{ borrow_list.id }}</strong> của bạn đã được Thầy soạn xong và sẵn sàng để bạn đến nhận.</p>
+
+    {% if borrow_list.expected_borrow_date %}
+    <p>Ngày dự kiến nhận bạn đã chọn là: <strong>{{ borrow_list.expected_borrow_date.strftime('%d-%m-%Y') }}</strong>.</p>
+    {% endif %}
+
+    <p>Vui lòng đến phòng G02 (cs1) vào [Giờ làm việc của Kho] để nhận các thiết bị sau:</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>STT</th>
+                <th>Tên thiết bị</th>
+                <th>Serial</th>
+                <th>Danh mục</th>
+                <th>Đơn vị</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ item.device.name }}</td>
+                <td>{{ item.device.serial }}</td>
+                <td>{{ item.device.category or 'N/A' }}</td>
+                <td>{{ item.device.unit or 'Cái' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p>Vui lòng mang theo thẻ sinh viên khi đến nhận.</p>
+    <p>Trân trọng,<br>Hệ thống Quản lý Kho VAA</p>
+</body>
+</html>

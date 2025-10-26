@@ -9,9 +9,12 @@
                 <form method="POST">
                     <div class="form-group"><input type="text" class="form-control" name="username" placeholder="Tên đăng nhập" required></div>
                     <div class="form-group"><input type="password" class="form-control" name="password" placeholder="Mật khẩu" required></div>
-                    <div class="form-group form-check">
-                        <input type="checkbox" class="form-check-input" name="remember" id="remember">
-                        <label class="form-check-label" for="remember">Ghi nhớ đăng nhập</label>
+                    <div class="form-group form-check d-flex justify-content-between align-items-center">
+                        <div>
+                            <input type="checkbox" class="form-check-input" name="remember" id="remember">
+                            <label class="form-check-label" for="remember">Ghi nhớ đăng nhập</label>
+                        </div>
+                        <small><a href="{{ url_for('main.reset_password_request') }}">Quên mật khẩu?</a></small>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
                 </form>
